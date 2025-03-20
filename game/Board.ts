@@ -91,6 +91,7 @@ class Board {
 	}
 
 	capture(src: Piece, dest: Piece): Piece {
+		if(src.color == dest.color) throw new Error("No friendly fire in chess :3");
 		this.move(src, dest.position);
 
 		return dest;
