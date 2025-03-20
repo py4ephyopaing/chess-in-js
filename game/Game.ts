@@ -19,3 +19,5 @@ class Game {
         this.board.initBoard();
     }
 }
+
+export { Game }
