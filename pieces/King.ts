@@ -1,4 +1,4 @@
-import { Board } from '../Board';
+import { Board } from '../game/Board';
 import { Move } from '../types';
 import { Piece } from './Piece';
 
