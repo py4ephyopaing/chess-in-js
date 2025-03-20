@@ -8,7 +8,10 @@ abstract class Piece {
     constructor(
         color: "white" | "black",
         position: Move
-    ) {}
+    ) {
+        this.color = color;
+        this.position = position;
+    }
     
     abstract getValidMoves(board: Board): Array<Move>;
 }
