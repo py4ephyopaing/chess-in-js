@@ -1,3 +1,4 @@
 type Move = { row: number, col: number };
+type TTurn = "white"|"black";
 
-export { Move }
+export { Move, TTurn }
