@@ -77,6 +77,24 @@ class Board {
 			default: throw new Error(`'${symbol}' is an invalid symbol.`);
 		}
 	}
+
+	getPiece(position: Move): Piece|null {
+		return this.grid[position.row][position.col];
+	}
+
+	move(src: Piece, dest: Move) { 
+		const oldPosition = src.position;
+		src.position = dest;
+
+		this.grid[dest.row][dest.col] = src;
+		this.grid[oldPosition.row][oldPosition.col] = null;
+	}
+
+	capture(src: Piece, dest: Piece): Piece {
+		this.move(src, dest.position);
+
+		return dest;
+	}
 }
 
 export { Board }
