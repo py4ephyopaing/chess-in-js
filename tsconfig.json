@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"target": "ES6",
+		"module": "CommonJS",
+		"outDir": "./dist",  
+		"rootDir": ".",      // Use the root directory for TypeScript files
+		"strict": true,
+		"noImplicitAny": true,
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"skipLibCheck": true
+	},
+	"include": ["*.ts"],  // Include all `.ts` files in the root
+	"exclude": ["node_modules", "dist"] 
+}
