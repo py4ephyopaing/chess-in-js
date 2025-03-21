@@ -30,7 +30,7 @@ class Pawn extends Piece {
             }
         }
     
-        return moves;
+        return moves.filter(move => board.isValidPosition(move));
     }
 }
 
