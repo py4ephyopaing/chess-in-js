@@ -34,7 +34,8 @@ class Game {
 
         // invalid move factor
         const validMoves = srcPosition.getValidMoves(this.board);
-        if(!validMoves.some(move => move == dest)) throw new Error(`Your ${srcPosition} cannot move to ${dest.row}x${dest.col}.`);
+        if(!validMoves.some(move => move.col == dest.col && move.row == dest.row))
+            throw new Error(`Your ${srcPosition} cannot move to ${dest.row}x${dest.col}.`);
 
         if(!destPosition) {
             this.board.move(srcPosition, dest);
