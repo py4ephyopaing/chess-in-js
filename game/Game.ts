@@ -41,7 +41,7 @@ class Game {
             this.board.move(srcPosition, dest);
             const destPosition = this.board.getPiece(dest);
             if(this.isKingInCheck(srcPosition.color) && destPosition) {
-                this.board.move(destPosition, src);
+                this.board.move(destPosition, src); // undo the move
             }
             return;
         }
@@ -91,7 +91,7 @@ class Game {
                 if(!stillCheck) return false;
             }
         }
-        
+
         return true;
     }
 }
