@@ -83,11 +83,13 @@ class Board {
 	}
 
 	move(src: Piece, dest: Move) { 
+		if(!src) throw new Error("SRC piece missing.");
+		
 		const oldPosition = src.position;
 		src.position = dest;
 
-		this.grid[dest.row][dest.col] = src;
 		this.grid[oldPosition.row][oldPosition.col] = null;
+		this.grid[dest.row][dest.col] = src;
 	}
 
 	capture(src: Piece, dest: Piece): Piece {
