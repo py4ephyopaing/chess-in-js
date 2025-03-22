@@ -65,18 +65,29 @@ test("Attack pieces correctly", () => {
     expect(game.lostPiecesOfWhite[0] instanceof Pawn).toBe(true);
 });
 
-test("isKingInCheck()", () => {
+test("Checkmate logic", () => {
     const game = new Game();
     game.board.buildBoard([
-        ['',	'',		'',		'K',		'',		'',		'',		''],
+        ['',	'',		'',		'K',		'',		'',		'',		''], // black
+        ['',	'',		'r',		'',		'',		'',		'',		''],
         ['',	'',		'',		'',		'',		'',		'',		''],
         ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'R',		'',		'',		''],
         ['',	'',		'',		'',		'',		'',		'',		''],
         ['',	'',		'',		'',		'',		'',		'',		''],
-        ['',	'',		'',		'',		'',		'',		'',		''],
-        ['',	'',		'',		'',		'',		'',		'',		''],
-        ['',	'',		'',		'q',		'k',		'',		'',		''],
+        ['',	'',		'',		'q',		'k',		'',		'',		''], // white
     ]);
 
+    expect(game.isCheckmate('black')).toBe(false);
     expect(game.isKingInCheck('black')).toBe(true);
-})
+    game.move({ row: 4, col: 4 }, { row: 4, col: 3 });
+    
+    expect(game.isKingInCheck('black')).toBe(false);
+    game.move({ row: 7, col: 3 }, { row: 4, col: 3 });
+    expect(game.isKingInCheck('black')).toBe(true);
+    expect(game.isCheckmate('black')).toBe(false);
+    
+    game.move({ row: 4, col: 3 }, { row: 1, col: 3 });
+    expect(game.isKingInCheck('black')).toBe(true);
+    expect(game.isCheckmate('black')).toBe(true);
+});
