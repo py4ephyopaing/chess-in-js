@@ -5,7 +5,7 @@ import { Bishop } from "../pieces/Bishop";
 import { Queen } from "../pieces/Queen";
 import { King } from "../pieces/King";
 import { Knight } from "../pieces/Knight";
-import { ChessSymbol, Move } from "../types";
+import { ChessSymbol, Color, Move } from "../types";
 
 class Board {
 	grid: (Piece | null)[][];
@@ -96,6 +96,37 @@ class Board {
 
 		return dest;
 	}
+
+	getKing(color: Color) {
+		const kingPosition = this.grid.find(
+			row => 
+				row.find(
+					piece => piece && piece.color === color && piece instanceof King
+				)
+		)?.find(piece => piece && piece.color == color && piece instanceof King);
+		
+		if(!kingPosition) throw new Error(`${color} king is not found.`);
+
+		return kingPosition.position;
+	}
+    
+    getAllPiecesof(color: Color): Array<Piece> {
+        const pieces: Array<Piece> = [];
+		
+		this.grid.map(
+			row => 
+				row.map(
+					piece => {
+						if(piece && piece.color == color && piece instanceof Piece) {
+							pieces.push(piece);
+						}
+					}
+				)
+		)
+
+
+        return pieces;
+    }
 }
 
 export { Board }

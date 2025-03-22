@@ -39,6 +39,10 @@ class Game {
 
         if(!destPosition) {
             this.board.move(srcPosition, dest);
+            const destPosition = this.board.getPiece(dest);
+            if(this.isKingInCheck(srcPosition.color) && destPosition) {
+                this.board.move(destPosition, src);
+            }
             return;
         }
         
@@ -48,6 +52,25 @@ class Game {
         } else {
             this.lostPiecesOfBlack.push(capturedPiece);
         }
+    }
+
+	isKingInCheck(color: Color) {
+		const king = this.board.getKing(color);
+        const pieces = this.board.getAllPiecesof(color == 'black' ? 'white': 'black');
+
+        const isCheck = pieces.some(piece => {
+            const moves = piece.getValidMoves(this.board);
+
+            if(moves.some(move => move.row == king.row && move.col == king.col)) {
+                return true;
+            }
+        });
+
+        return isCheck;
+	}
+
+    isCheckmate(color: Color) {
+
     }
 }
 
