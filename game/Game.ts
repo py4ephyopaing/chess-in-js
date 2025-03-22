@@ -1,9 +1,9 @@
 import { Piece } from "../pieces/Piece";
-import { Move, TTurn } from "../types"
+import { Move, Color } from "../types"
 import { Board } from "./Board";
 
 class Game {
-    turn: TTurn;
+    turn: Color;
     lostPiecesOfWhite: Array<Piece>;
     lostPiecesOfBlack: Array<Piece>;
     board: Board;

@@ -1,12 +1,12 @@
 import { Board } from "../game/Board"
-import { Move } from "../types";
+import { Color, Move } from "../types";
 
 abstract class Piece {
-    color: "white" | "black"
+    color: Color
     position: Move
     
     constructor(
-        color: "white" | "black",
+        color: Color,
         position: Move
     ) {
         this.color = color;
