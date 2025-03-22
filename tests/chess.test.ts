@@ -8,6 +8,7 @@ import { Queen } from '../pieces/Queen';
 test("Move pieces correctly", () => {
     const game = new Game();
     game.startGame();
+    
     game.move({ row: 1, col: 1 }, { row: 2, col: 1 }); // move Pawn
     expect(
         game.board.grid[1][1] == null &&
@@ -62,4 +63,20 @@ test("Attack pieces correctly", () => {
     game.move({ row: 3, col: 1 }, { row: 4, col: 0 });
 
     expect(game.lostPiecesOfWhite[0] instanceof Pawn).toBe(true);
+});
+
+test("isKingInCheck()", () => {
+    const game = new Game();
+    game.board.buildBoard([
+        ['',	'',		'',		'K',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'q',		'k',		'',		'',		''],
+    ]);
+
+    expect(game.isKingInCheck('black')).toBe(true);
 })
