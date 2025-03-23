@@ -42,16 +42,25 @@ class Game {
             const destPosition = this.board.getPiece(dest);
             if(this.isKingInCheck(srcPosition.color) && destPosition) {
                 this.board.move(destPosition, src); // undo the move
+                return false;
             }
-            return;
+            return true;
         }
         
         const capturedPiece = this.board.capture(srcPosition, destPosition);
+        if(this.isKingInCheck(srcPosition.color) && capturedPiece) { // will check the king? and then undo.
+            this.board.move(srcPosition, src);
+            this.board.move(capturedPiece, dest);
+            return false;
+        }
+
         if(capturedPiece.color == 'white') {
             this.lostPiecesOfWhite.push(capturedPiece);
         } else {
             this.lostPiecesOfBlack.push(capturedPiece);
         }
+
+        return true;
     }
 
 	isKingInCheck(color: Color) {
