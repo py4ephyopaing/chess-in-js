@@ -124,7 +124,7 @@ test("Should capture", () => {
     expect(game.lostPiecesOfWhite[0] instanceof Pawn).toBe(true);
 });
 
-test("Checkmate logic", () => {
+test("Should Checkmate", () => {
     const game = new Game();
     game.board.buildBoard([
         ['',	'',		'',		'K',	'',		'',		'',		''], // black
@@ -152,4 +152,20 @@ test("Checkmate logic", () => {
     game.move({ row: 4, col: 3 }, { row: 1, col: 3 });
     expect(game.isKingInCheck('black')).toBe(true);
     expect(game.isCheckmate('black')).toBe(true);
+});
+
+test("Should Stalemate", () => {
+    const game = new Game();
+    game.board.buildBoard([
+        ['',	'',		'',		'', 	'q',	'',		'',		''], // black
+        ['',	'',		'K',	'',		'',		'',		'',		''],
+        ['q',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',	    '',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'', 	'',	    '',		'',		'k'], // white
+    ]);
+
+    expect(game.isStalemate('black')).toBe(true);
 });
