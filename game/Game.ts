@@ -82,9 +82,7 @@ class Game {
         return isCheck;
 	}
 
-    isCheckmate(color: Color) {
-        if(!this.isKingInCheck(color)) return false;
-
+    isAnymoveLeft(color: Color) {
         const pieces = this.board.getAllPiecesof(color);
 
         for(const piece of pieces) {
@@ -101,37 +99,21 @@ class Game {
                     this.board.move(dest, move);
                 }
 
-                if(!stillCheck) return false;
+                if(!stillCheck) return true;
             }
         }
 
-        return true;
+        return false;
+    }
+
+    isCheckmate(color: Color) {
+        if(!this.isKingInCheck(color)) return false;
+        return !this.isAnymoveLeft(color);
     }
 
     isStalemate(color: Color) {
         if(this.isKingInCheck(color)) return false;
-
-        const pieces = this.board.getAllPiecesof(color);
-
-        for(const piece of pieces) {
-            const originalPosition = { ...piece.position };
-            const validMoves = piece.getValidMoves(this.board);
-
-            for(const move of validMoves) {
-                const dest = this.board.getPiece(move);
-                this.board.move(piece, move);
-                const stillCheck = this.isKingInCheck(color);
-                this.board.move(piece, originalPosition);
-
-                if (dest) {
-                    this.board.move(dest, move);
-                }
-
-                if(!stillCheck) return false;
-            }
-        }
-
-        return true;
+        return !this.isAnymoveLeft(color);
     }
 }
 
