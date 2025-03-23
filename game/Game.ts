@@ -107,6 +107,32 @@ class Game {
 
         return true;
     }
+
+    isStalemate(color: Color) {
+        if(this.isKingInCheck(color)) return false;
+
+        const pieces = this.board.getAllPiecesof(color);
+
+        for(const piece of pieces) {
+            const originalPosition = { ...piece.position };
+            const validMoves = piece.getValidMoves(this.board);
+
+            for(const move of validMoves) {
+                const dest = this.board.getPiece(move);
+                this.board.move(piece, move);
+                const stillCheck = this.isKingInCheck(color);
+                this.board.move(piece, originalPosition);
+
+                if (dest) {
+                    this.board.move(dest, move);
+                }
+
+                if(!stillCheck) return false;
+            }
+        }
+
+        return true;
+    }
 }
 
 export { Game }
