@@ -30,8 +30,10 @@ class Game {
         const srcPosition = this.board.getPiece(src);
         const destPosition = this.board.getPiece(dest);
 
+        
         if(!srcPosition) throw new Error(`No piece at ${src.row}x${src.col}.`);
-
+        if(srcPosition.color != this.turn) throw new Error(`This is not ${srcPosition.color} turn.`);
+        
         // invalid move factor
         const validMoves = srcPosition.getValidMoves(this.board);
         if(!validMoves.some(move => move.col == dest.col && move.row == dest.row))
@@ -44,6 +46,7 @@ class Game {
                 this.board.move(destPosition, src); // undo the move
                 return false;
             }
+            this.turn = this.turn == 'black' ? 'white' : 'black';
             return true;
         }
         
@@ -59,7 +62,8 @@ class Game {
         } else {
             this.lostPiecesOfBlack.push(capturedPiece);
         }
-
+        
+        this.turn = this.turn == 'black' ? 'white' : 'black';
         return true;
     }
 
