@@ -4,56 +4,108 @@ import { King } from '../pieces/King';
 import { Knight } from '../pieces/Knight';
 import { Pawn } from '../pieces/Pawn';
 import { Queen } from '../pieces/Queen';
+import { Rook } from '../pieces/Rook';
 
-test("Move pieces correctly", () => {
+test("Should can move", () => {
     const game = new Game();
     game.startGame();
     
-    game.move({ row: 1, col: 1 }, { row: 2, col: 1 }); // move Pawn
+    expect(game.move({ row: 1, col: 1 }, { row: 2, col: 1 })).toBe(true); // move Pawn
     expect(
         game.board.grid[1][1] == null &&
         game.board.grid[2][1] instanceof Pawn
     ).toBe(true);
 
-    game.move({ row: 0, col: 1 }, { row: 2, col: 2 }); // move Knight
+    expect(game.move({ row: 0, col: 1 }, { row: 2, col: 2 })).toBe(true); // move Knight
     expect(
         game.board.grid[0][1] == null &&
         game.board.grid[2][2] instanceof Knight
     ).toBe(true);
 
-    game.move({ row: 0, col: 2 }, { row: 2, col: 0 }); // Bishop
+    expect(game.move({ row: 0, col: 2 }, { row: 2, col: 0 })).toBe(true); // Bishop
     expect(
         game.board.grid[0][2] == null &&
         game.board.grid[2][0] instanceof Bishop
     ).toBe(true);
 
-    game.move({ row: 6, col: 5 }, { row: 4, col: 5}); // pawn black
+    expect(game.move({ row: 6, col: 5 }, { row: 4, col: 5})).toBe(true); // pawn black
     expect(
         game.board.grid[6][5] == null &&
         game.board.grid[4][5] instanceof Pawn
     ).toBe(true);
 
-    game.move({ row: 7, col: 4 }, { row: 4, col: 7}); // queen black
+    expect(game.move({ row: 7, col: 4 }, { row: 4, col: 7})).toBe(true); // queen black
     expect(
         game.board.grid[7][4] == null &&
         game.board.grid[4][7] instanceof Queen
     ).toBe(true);
 
-    game.move({ row: 7, col: 3 }, { row: 7, col: 4}); // king black
+    expect(game.move({ row: 7, col: 3 }, { row: 7, col: 4})).toBe(true); // king black
     expect(
         game.board.grid[7][3] == null &&
         game.board.grid[7][4] instanceof King
     ).toBe(true);
 });
 
-test("Attack pieces correctly", () => {
+test("Should not move", () => {
+    const game = new Game();
+
+    game.board.buildBoard([
+        ['',	'',		'',		'K',	'',		'',		'',		''], // black
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'R',	'',		'',		'',		''],
+        ['',	'',		'',		'',		'',	    '',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'q',	'',		'',		'',		''],
+        ['',	'',		'',		'',	    'k',		'',		'',		''], // white
+    ]);
+
+    expect(game.move({ row: 3, col: 3 }, { row: 3, col: 4 })).toBe(false);
+    expect(
+        game.board.grid[3][3] instanceof Rook &&
+        game.board.grid[3][3].color == 'black'
+    ).toBe(true);
+
+    expect(
+        game.board.grid[3][4] == null
+    ).toBe(true);
+});
+
+test("Should not capture", () => {
+    const game = new Game();
+
+    game.board.buildBoard([
+        ['',	'',		'',		'K',	'',		'',		'',		''], // black
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'P',	'',		'',		'',		''],
+        ['',	'',		'',		'',		'p',	'',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'q',	'',		'',		'',		''],
+        ['',	'',		'',		'k',	'',		'',		'',		''], // white
+    ]);
+
+    expect(game.move({ row: 3, col: 3 }, { row: 4, col: 4 })).toBe(false);
+    expect(
+        game.board.grid[3][3] instanceof Pawn &&
+        game.board.grid[3][3].color == 'black'
+    ).toBe(true);
+
+    expect(
+        game.board.grid[4][4] instanceof Pawn &&
+        game.board.grid[4][4].color == 'white'
+    ).toBe(true);
+});
+
+test("Should capture", () => {
     const game = new Game();
 
     game.board.buildBoard([
         ['R',	'KN',	'B',	'K',	'Q',	'B',	'KN',	'R'], // black
-        ['P',	'',	'P',	'P',	'P',	'P',	'P',	'P'],
+        ['P',	'',	    'P',	'P',	'P',	'P',	'P',	'P'],
         ['',	'',		'',		'',		'',		'',		'',		''],
-        ['',	'P',		'',		'',		'',		'',		'',		''],
+        ['',	'P',	'',		'',		'',		'',		'',		''],
         ['p',	'',		'',		'',		'',		'',		'',		''],
         ['',	'',		'',		'',		'',		'',		'',		''],
         ['',	'p',	'p',	'p',	'p',	'p',	'p',	'p'],
@@ -68,14 +120,14 @@ test("Attack pieces correctly", () => {
 test("Checkmate logic", () => {
     const game = new Game();
     game.board.buildBoard([
-        ['',	'',		'',		'K',		'',		'',		'',		''], // black
-        ['',	'',		'r',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'K',	'',		'',		'',		''], // black
+        ['',	'',		'r',	'',		'',		'',		'',		''],
         ['',	'',		'',		'',		'',		'',		'',		''],
         ['',	'',		'',		'',		'',		'',		'',		''],
-        ['',	'',		'',		'',		'R',		'',		'',		''],
+        ['',	'',		'',		'',		'R',	'',		'',		''],
         ['',	'',		'',		'',		'',		'',		'',		''],
         ['',	'',		'',		'',		'',		'',		'',		''],
-        ['',	'',		'',		'q',		'k',		'',		'',		''], // white
+        ['',	'',		'',		'q',	'k',	'',		'',		''], // white
     ]);
 
     expect(game.isCheckmate('black')).toBe(false);
