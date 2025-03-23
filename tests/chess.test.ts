@@ -167,5 +167,6 @@ test("Should Stalemate", () => {
         ['',	'',		'',		'', 	'',	    '',		'',		'k'], // white
     ]);
 
+    expect(game.isCheckmate('black')).toBe(false);
     expect(game.isStalemate('black')).toBe(true);
 });
