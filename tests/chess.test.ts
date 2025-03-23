@@ -9,19 +9,21 @@ import { Rook } from '../pieces/Rook';
 test("Should can move", () => {
     const game = new Game();
     game.startGame();
-    
+    game.turn = 'black';
     expect(game.move({ row: 1, col: 1 }, { row: 2, col: 1 })).toBe(true); // move Pawn
     expect(
         game.board.grid[1][1] == null &&
         game.board.grid[2][1] instanceof Pawn
     ).toBe(true);
 
+    game.turn = 'black';
     expect(game.move({ row: 0, col: 1 }, { row: 2, col: 2 })).toBe(true); // move Knight
     expect(
         game.board.grid[0][1] == null &&
         game.board.grid[2][2] instanceof Knight
     ).toBe(true);
 
+    game.turn = 'black';
     expect(game.move({ row: 0, col: 2 }, { row: 2, col: 0 })).toBe(true); // Bishop
     expect(
         game.board.grid[0][2] == null &&
@@ -34,12 +36,14 @@ test("Should can move", () => {
         game.board.grid[4][5] instanceof Pawn
     ).toBe(true);
 
+    game.turn = 'white';
     expect(game.move({ row: 7, col: 4 }, { row: 4, col: 7})).toBe(true); // queen black
     expect(
         game.board.grid[7][4] == null &&
         game.board.grid[4][7] instanceof Queen
     ).toBe(true);
 
+    game.turn = 'white';
     expect(game.move({ row: 7, col: 3 }, { row: 7, col: 4})).toBe(true); // king black
     expect(
         game.board.grid[7][3] == null &&
@@ -61,6 +65,7 @@ test("Should not move", () => {
         ['',	'',		'',		'',	    'k',		'',		'',		''], // white
     ]);
 
+    game.turn = 'black';
     expect(game.move({ row: 3, col: 3 }, { row: 3, col: 4 })).toBe(false);
     expect(
         game.board.grid[3][3] instanceof Rook &&
@@ -85,7 +90,8 @@ test("Should not capture", () => {
         ['',	'',		'',		'q',	'',		'',		'',		''],
         ['',	'',		'',		'k',	'',		'',		'',		''], // white
     ]);
-
+    
+    game.turn = 'black';
     expect(game.move({ row: 3, col: 3 }, { row: 4, col: 4 })).toBe(false);
     expect(
         game.board.grid[3][3] instanceof Pawn &&
@@ -112,6 +118,7 @@ test("Should capture", () => {
         ['r',	'kn',	'b',	'k',	'q',	'b',	'kn',	'r'], // white
     ]);
 
+    game.turn = 'black';
     game.move({ row: 3, col: 1 }, { row: 4, col: 0 });
 
     expect(game.lostPiecesOfWhite[0] instanceof Pawn).toBe(true);
@@ -132,6 +139,8 @@ test("Checkmate logic", () => {
 
     expect(game.isCheckmate('black')).toBe(false);
     expect(game.isKingInCheck('black')).toBe(true);
+
+    game.turn = 'black';
     game.move({ row: 4, col: 4 }, { row: 4, col: 3 });
     
     expect(game.isKingInCheck('black')).toBe(false);
@@ -139,6 +148,7 @@ test("Checkmate logic", () => {
     expect(game.isKingInCheck('black')).toBe(true);
     expect(game.isCheckmate('black')).toBe(false);
     
+    game.turn = 'white';
     game.move({ row: 4, col: 3 }, { row: 1, col: 3 });
     expect(game.isKingInCheck('black')).toBe(true);
     expect(game.isCheckmate('black')).toBe(true);
