@@ -170,3 +170,23 @@ test("Should Stalemate", () => {
     expect(game.isCheckmate('black')).toBe(false);
     expect(game.isStalemate('black')).toBe(true);
 });
+
+test("Should promote pawn", () => {
+    const game = new Game();
+    game.board.buildBoard([
+        ['',	'',		'',		'', 	'',	    '',		'',		''], // black
+        ['',	'p',	'',	    '',		'',		'',		'',		'K'],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',	    '',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'', 	'',	    '',		'',		'k'], // white
+    ]);
+    
+    expect(game.move({ row: 1, col: 1 }, { row: 0, col: 1 })).toBe(true);
+    expect(
+        game.board.grid[0][1] instanceof Queen &&
+        game.board.grid[0][1].color == "white"
+    ).toBe(true);
+});
