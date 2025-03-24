@@ -189,4 +189,22 @@ test("Should promote pawn", () => {
         game.board.grid[0][1] instanceof Queen &&
         game.board.grid[0][1].color == "white"
     ).toBe(true);
+
+    
+    game.board.buildBoard([
+        ['',	'',		'',		'', 	'',	    '',		'',		''], // black
+        ['',	'',	    '',	    '',		'',		'',		'',		'K'],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',	    '',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'P',	'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'', 	'',	    '',		'',		'k'], // white
+    ]);
+    
+    expect(game.move({ row: 6, col: 1 }, { row: 7, col: 1 })).toBe(true);
+    expect(
+        game.board.grid[7][1] instanceof Queen &&
+        game.board.grid[7][1].color == "black"
+    ).toBe(true);
 });
