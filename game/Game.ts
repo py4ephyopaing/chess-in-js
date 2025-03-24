@@ -1,5 +1,10 @@
+import { Bishop } from "../pieces/Bishop";
+import { Knight } from "../pieces/Knight";
+import { Pawn } from "../pieces/Pawn";
 import { Piece } from "../pieces/Piece";
-import { Move, Color } from "../types"
+import { Queen } from "../pieces/Queen";
+import { Rook } from "../pieces/Rook";
+import { Move, Color, Promote } from "../types"
 import { Board } from "./Board";
 
 class Game {
@@ -38,13 +43,16 @@ class Game {
         const validMoves = srcPosition.getValidMoves(this.board);
         if(!validMoves.some(move => move.col == dest.col && move.row == dest.row))
             throw new Error(`Your ${srcPosition} cannot move to ${dest.row}x${dest.col}.`);
-
+        
         if(!destPosition) {
             this.board.move(srcPosition, dest);
             const destPosition = this.board.getPiece(dest);
             if(this.isKingInCheck(srcPosition.color) && destPosition) {
                 this.board.move(destPosition, src); // undo the move
                 return false;
+            }
+            if(destPosition instanceof Pawn) {
+                this.promotePawn(destPosition, 'queen');
             }
             this.turn = this.turn == 'black' ? 'white' : 'black';
             return true;
@@ -65,6 +73,20 @@ class Game {
         
         this.turn = this.turn == 'black' ? 'white' : 'black';
         return true;
+    }
+
+    promotePawn(pawn: Pawn, promoteTo: Promote) {
+        if(!this.board.isPromotion(pawn)) return false;
+
+        let target: Queen|Knight|Bishop|Rook;
+        switch(promoteTo) {
+            case 'queen': target = new Queen(pawn.color, pawn.position); break;
+            case 'bishop': target = new Bishop(pawn.color, pawn.position); break;
+            case 'knight': target = new Knight(pawn.color, pawn.position); break;
+            case 'rook': target = new Rook(pawn.color, pawn.position); break;
+        }
+
+        this.board.move(target, pawn.position);
     }
 
 	isKingInCheck(color: Color) {

@@ -129,6 +129,10 @@ class Board {
 
         return pieces;
     }
+
+	isPromotion(pawn: Pawn) {
+		return pawn.color == 'black' ? pawn.position.row == 7 : pawn.position.row == 0;
+	}
 }
 
 export { Board }
