@@ -90,18 +90,9 @@ class Game {
     }
 
 	isKingInCheck(color: Color) {
-		const king = this.board.getKing(color);
-        const pieces = this.board.getAllPiecesof(color == 'black' ? 'white': 'black');
-
-        const isCheck = pieces.some(piece => {
-            const moves = piece.getValidMoves(this.board);
-
-            if(moves.some(move => move.row == king.row && move.col == king.col)) {
-                return true;
-            }
-        });
-
-        return isCheck;
+		const kingPosition = this.board.getKing(color);
+        
+        return this.board.isInCheck(kingPosition, color == 'black' ? 'white' : 'black');
 	}
 
     isAnymoveLeft(color: Color) {

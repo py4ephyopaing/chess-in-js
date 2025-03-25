@@ -130,6 +130,18 @@ class Board {
         return pieces;
     }
 
+	isInCheck(position: Move, color: Color): boolean {
+        const pieces = this.getAllPiecesof(color);
+
+		const isCheck = pieces.some(piece => 
+			piece
+				.getValidMoves(this)
+				.some(move => move.row == position.row && move.col == position.col)
+        );
+
+		return isCheck;
+	}
+
 	isPromotion(pawn: Pawn) {
 		return pawn.color == 'black' ? pawn.position.row == 7 : pawn.position.row == 0;
 	}
