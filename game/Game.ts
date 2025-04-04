@@ -1,4 +1,5 @@
 import { Bishop } from "../pieces/Bishop";
+import { King } from "../pieces/King";
 import { Knight } from "../pieces/Knight";
 import { Pawn } from "../pieces/Pawn";
 import { Piece } from "../pieces/Piece";
@@ -44,8 +45,9 @@ class Game {
         if(!validMoves.some(move => move.col == dest.col && move.row == dest.row))
             throw new Error(`Your ${srcPosition} cannot move to ${dest.row}x${dest.col}.`);
         
-        if(!destPosition) {
+        if(!destPosition) { // if there is no piece at dest.
             this.board.move(srcPosition, dest);
+            
             const destPosition = this.board.getPiece(dest);
             if(this.isKingInCheck(srcPosition.color) && destPosition) {
                 this.board.move(destPosition, src); // undo the move
@@ -54,6 +56,15 @@ class Game {
             if(destPosition instanceof Pawn) {
                 this.promotePawn(destPosition, 'queen');
             }
+
+            if(
+                srcPosition instanceof King && 
+                (dest.row == 0 || dest.row == 7) &&
+                (dest.col == 1 || dest.col == 5)
+            ) {
+                this.board.castling(srcPosition, true);
+            }
+
             this.turn = this.turn == 'black' ? 'white' : 'black';
             return true;
         }
@@ -97,6 +108,12 @@ class Game {
 
     isAnymoveLeft(color: Color) {
         const pieces = this.board.getAllPiecesof(color);
+        const kingPosition = this.board.getKing(color);
+        const king = this.board.grid[kingPosition.row][kingPosition.col];
+
+        if(king && king instanceof Piece) {
+            pieces.push(king);
+        }
 
         for(const piece of pieces) {
             const originalPosition = { ...piece.position };

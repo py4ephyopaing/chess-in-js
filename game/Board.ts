@@ -18,11 +18,6 @@ class Board {
 		return move.row >= 0 && move.row < 8 && move.col >= 0 && move.col < 8;
 	}
 
-	placePiece(piece: Piece, move: Move) {
-		this.grid[move.row][move.col] = piece;
-		piece.position = move;
-	}
-
 	initBoard() {
 		this.buildBoard([
 			['R',	'KN',	'B',	'K',	'Q',	'B',	'KN',	'R'], // black
@@ -86,7 +81,7 @@ class Board {
 		if(!src) throw new Error("SRC piece missing.");
 		
 		const oldPosition = src.position;
-		src.position = dest;
+		src.move(dest);
 
 		this.grid[oldPosition.row][oldPosition.col] = null;
 		this.grid[dest.row][dest.col] = src;
@@ -97,6 +92,19 @@ class Board {
 		this.move(src, dest.position);
 
 		return dest;
+	}
+
+	castling(king: King, isKingSide: boolean) {
+		const rookCol = isKingSide ? 7 : 0;
+		const rook = this.getPiece({ row: king.position.row, col: rookCol });
+
+		if(!rook) throw new Error(`Rook is missing.`); // should never happen.
+
+		const newRookCol = isKingSide ? 4 : 2;
+		this.move(rook, { row: king.position.row, col: newRookCol });
+
+		const newKingCol = isKingSide ? 5 : 1;
+		this.move(king, { row: king.position.row, col: newKingCol });
 	}
 
 	getKing(color: Color) {
@@ -119,7 +127,7 @@ class Board {
 			row => 
 				row.map(
 					piece => {
-						if(piece && piece.color == color && piece instanceof Piece) {
+						if(piece && piece.color == color && piece instanceof Piece && !(piece instanceof King)) {
 							pieces.push(piece);
 						}
 					}

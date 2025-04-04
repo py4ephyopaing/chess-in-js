@@ -1,8 +1,18 @@
 import { Board } from '../game/Board';
-import { Move } from '../types';
+import { Color, Move } from '../types';
 import { Piece } from './Piece';
 
 class Rook extends Piece {
+	hasMoved: boolean;
+
+    constructor(
+        color: Color,
+        position: Move
+    ) {
+		super(color, position);
+		this.hasMoved = false;
+    }
+
     getValidMoves(board: Board): Array<Move> {
         const moves = this.getLinearMoves(board, [[1, 0], [-1, 0], [0, 1], [0, -1]]);
 
@@ -28,6 +38,11 @@ class Rook extends Piece {
 		}
 		return moves;
     }
+
+	move(newPosition: Move): void {
+		super.move(newPosition);
+		this.hasMoved = true;
+	}
 }
 
 export { Rook }

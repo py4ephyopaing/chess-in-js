@@ -12,9 +12,12 @@ abstract class Piece {
         this.color = color;
         this.position = position;
     }
+
+    move(newPosition: Move) {
+        this.position = newPosition;
+    }
     
     abstract getValidMoves(board: Board): Array<Move>;
 }
 
 export { Piece }
-  
