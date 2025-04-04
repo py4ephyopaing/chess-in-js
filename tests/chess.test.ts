@@ -145,6 +145,7 @@ test("Should Checkmate", () => {
     
     expect(game.isKingInCheck('black')).toBe(false);
     game.move({ row: 7, col: 3 }, { row: 4, col: 3 });
+
     expect(game.isKingInCheck('black')).toBe(true);
     expect(game.isCheckmate('black')).toBe(false);
     
@@ -189,7 +190,6 @@ test("Should promote pawn", () => {
         game.board.grid[0][1] instanceof Queen &&
         game.board.grid[0][1].color == "white"
     ).toBe(true);
-
     
     game.board.buildBoard([
         ['',	'',		'',		'', 	'',	    '',		'',		''], // black
@@ -206,5 +206,63 @@ test("Should promote pawn", () => {
     expect(
         game.board.grid[7][1] instanceof Queen &&
         game.board.grid[7][1].color == "black"
+    ).toBe(true);
+});
+
+test("Should castling", () => {
+    const game = new Game();
+
+    game.board.buildBoard([
+        ['R',	'KN',	'B',	'K',	'', 	'', 	'', 	'R'], // black
+        ['',	'',	    '',	    '',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',	    '',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'P',	'',		'',		'',		'',		'',		''],
+        ['r',	'kn',	'b',	'k',	''  ,	'b',	'kn',	'r'], // white
+    ]);
+    
+    if(!(game.board.grid[0][3] instanceof King)) return;
+
+    const blackKingValidMoves = game.board.grid[0][3].getValidMoves(game.board);
+    
+    expect(
+        blackKingValidMoves.some(
+            ({ row, col }) => row == 0 && col == 5
+        )
+    ).toBe(true);
+
+    game.turn = 'black';
+    game.move({ row: 0, col: 3 }, { row: 0, col: 5 });
+
+    expect(
+        game.board.grid[0][5] instanceof King && game.board.grid[0][4] instanceof Rook
+    ).toBe(true);
+
+    game.board.buildBoard([
+        ['R',	'KN',	'B',	'K',	'', 	'', 	'', 	'R'], // black
+        ['',	'',	    '',	    '',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',	    '',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'P',	'',		'',		'',		'',		'',		''],
+        ['r',	'',	    '', 	'k',	''  ,	'', 	'', 	'r'], // white
+    ]);
+    
+    if(!(game.board.grid[7][3] instanceof King)) return;
+
+    const whiteKingValidMoves = game.board.grid[7][3].getValidMoves(game.board);
+    expect(
+        whiteKingValidMoves.some(
+            ({ row, col }) => row == 7 && col == 1
+        )
+    ).toBe(true);
+
+    game.move({ row: 7, col: 3 }, { row: 7, col: 5 });
+
+    expect(
+        game.board.grid[7][5] instanceof King && game.board.grid[7][4] instanceof Rook
     ).toBe(true);
 });
