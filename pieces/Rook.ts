@@ -26,14 +26,15 @@ class Rook extends Piece {
 			let row = this.position.row;
 			let col = this.position.col;
 			while (board.isValidPosition({ row: row + dx, col: col + dy })) {
-			row += dx;
-			col += dy;
-			const piece = board.grid[row][col];
-			if (piece) {
-				if (piece.color !== this.color) moves.push({ row, col }); // Capture
-				break;
-			}
-			moves.push({ row, col });
+				row += dx;
+				col += dy;
+				const piece = board.grid[row][col];
+				if (piece) {
+					if (piece.color !== this.color) // if a piece was found but it's not same color.
+						moves.push({ row, col }); // Capture
+					break; // stop the path.
+				}
+				moves.push({ row, col });
 			}
 		}
 		return moves;

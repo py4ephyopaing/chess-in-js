@@ -15,7 +15,7 @@ class Knight extends Piece {
 			{ row: this.position.row - 1, col: this.position.col - 2 },
 		];
 
-		return moves.filter(move => board.isValidPosition(move));
+		return moves.filter(board.isValidPosition);
 	}
 }
 

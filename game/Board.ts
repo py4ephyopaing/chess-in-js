@@ -18,7 +18,7 @@ class Board {
 		return move.row >= 0 && move.row < 8 && move.col >= 0 && move.col < 8;
 	}
 
-	initBoard() {
+	initBoard() { // initiate the board.
 		this.buildBoard([
 			['R',	'KN',	'B',	'K',	'Q',	'B',	'KN',	'R'], // black
 			['P',	'P',	'P',	'P',	'P',	'P',	'P',	'P'],
@@ -35,7 +35,8 @@ class Board {
 		if(boardStructure.length != 8) throw new Error("Board Structure must be 8x8 Array.");
 
 		boardStructure.map(row => {
-			if(row.length != 8) throw new Error("Board Structure must be 8x8 Array.");
+			if(row.length != 8)
+				throw new Error("Board Structure must be 8x8 Array.");
 		});
 
 		boardStructure.map((row, row_index) => {
@@ -78,7 +79,7 @@ class Board {
 	}
 
 	move(src: Piece, dest: Move) { 
-		if(!src) throw new Error("SRC piece missing.");
+		if(!src) throw new Error("SRC piece missing."); // should never happen.
 		
 		const oldPosition = src.position;
 		src.move(dest);
@@ -88,7 +89,7 @@ class Board {
 	}
 
 	capture(src: Piece, dest: Piece): Piece {
-		if(src.color == dest.color) throw new Error("No friendly fire in chess :3");
+		if(src.color == dest.color) throw new Error("No friendly fire in chess :3"); // should never happen.
 		this.move(src, dest.position);
 
 		return dest;
@@ -105,6 +106,7 @@ class Board {
 
 		const newKingCol = isKingSide ? 5 : 1;
 		this.move(king, { row: king.position.row, col: newKingCol });
+		return true;
 	}
 
 	getKing(color: Color) {
@@ -127,9 +129,8 @@ class Board {
 			row => 
 				row.map(
 					piece => {
-						if(piece && piece.color == color && piece instanceof Piece && !(piece instanceof King)) {
+						if(piece && piece.color == color && piece instanceof Piece && !(piece instanceof King)) // get all pieces but not the king
 							pieces.push(piece);
-						}
 					}
 				)
 		)

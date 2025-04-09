@@ -45,37 +45,41 @@ class Game {
         if(!validMoves.some(move => move.col == dest.col && move.row == dest.row))
             throw new Error(`Your ${srcPosition} cannot move to ${dest.row}x${dest.col}.`);
         
-        if(!destPosition) { // if there is no piece at dest.
+        if(!destPosition) { // if there is no piece at dest. (just move)
             this.board.move(srcPosition, dest);
             
             const destPosition = this.board.getPiece(dest);
-            if(this.isKingInCheck(srcPosition.color) && destPosition) {
+
+            if(this.isKingInCheck(srcPosition.color) && destPosition) { // invalid move because king will be check.
                 this.board.move(destPosition, src); // undo the move
                 return false;
             }
-            if(destPosition instanceof Pawn) {
-                this.promotePawn(destPosition, 'queen');
+
+            if(destPosition instanceof Pawn) { // promotion
+                this.promotePawn(destPosition, 'queen'); // need to handle here.
             }
 
             if(
                 srcPosition instanceof King && 
                 (dest.row == 0 || dest.row == 7) &&
                 (dest.col == 1 || dest.col == 5)
-            ) {
+            ) { // castling
                 this.board.castling(srcPosition, true);
             }
 
             this.turn = this.turn == 'black' ? 'white' : 'black';
             return true;
         }
-        
+
+        // otherwise there's a piece in dest.
         const capturedPiece = this.board.capture(srcPosition, destPosition);
-        if(this.isKingInCheck(srcPosition.color) && capturedPiece) { // will check the king? and then undo.
+        if(this.isKingInCheck(srcPosition.color) && capturedPiece) { // will check the king? and then undo the capture.
             this.board.move(srcPosition, src);
             this.board.move(capturedPiece, dest);
             return false;
         }
 
+        // push to lost pieces.
         if(capturedPiece.color == 'white') {
             this.lostPiecesOfWhite.push(capturedPiece);
         } else {
