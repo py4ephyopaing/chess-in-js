@@ -32,6 +32,13 @@ class Game {
         return piece.getValidMoves(this.board);
     }
 
+    isGameOver() {
+        if(this.isCheckmate(this.turn)) return 'checkmate';
+        if(this.isStalemate(this.turn)) return 'stalemate';
+        
+        return false;
+    }
+
     move(src: Move, dest: Move) {
         const srcPosition = this.board.getPiece(src);
         const destPosition = this.board.getPiece(dest);
