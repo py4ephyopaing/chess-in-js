@@ -5,4 +5,4 @@ type Promote = 'queen'|'knight'|'bishop'|'rook';
 type BoardStructure = Array<ChessSymbol[]>;
 type MoveType = "move"|"capture"|"castling"|"enPassant"|"promote";
 
-export { Move, Color, ChessSymbol, Promote, BoardStructure, MoveType }
+export type { Move, Color, ChessSymbol, Promote, BoardStructure, MoveType }

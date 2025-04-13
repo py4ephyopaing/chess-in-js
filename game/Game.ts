@@ -58,7 +58,7 @@ class Game {
             this.board.move(srcPosition, dest); // move
 
             const movedPosition = this.board.getPiece(dest); // moved Piece
-            var moveType: MoveType = "move";
+            let moveType: MoveType = "move";
 
             if(
                 this.isKingInCheck(srcPosition.color) &&

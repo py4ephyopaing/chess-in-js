@@ -1,16 +1,15 @@
 {
 	"name": "chess",
 	"version": "1.0.0",
-	"main": "index.js",
-	"types": "index.d.ts",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"type": "module",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "tsc",
 		"watch": "tsc --watch"
 	},
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"author": "Pyae Phyo Paing",
 	"keywords": [
 		"chess",
