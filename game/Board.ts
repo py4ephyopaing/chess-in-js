@@ -5,13 +5,16 @@ import { Bishop } from "../pieces/Bishop";
 import { Queen } from "../pieces/Queen";
 import { King } from "../pieces/King";
 import { Knight } from "../pieces/Knight";
-import { ChessSymbol, Color, Move } from "../types";
+import { BoardStructure, ChessSymbol, Color, Move } from "../types";
+import { History } from "./History";
 
 class Board {
 	grid: (Piece | null)[][];
+	history: History;
 
 	constructor() {
 		this.grid = Array(8).fill(null).map(() => Array(8).fill(null));
+		this.history = new History();
 	}
 
 	isValidPosition(move: Move): boolean {
@@ -31,7 +34,8 @@ class Board {
 		]);
 	}
 
-	buildBoard(boardStructure: Array<ChessSymbol[]>) {
+	buildBoard(boardStructure: BoardStructure) {
+		if(!Array.isArray(boardStructure)) throw new Error("Board Structure must be an Array.");
 		if(boardStructure.length != 8) throw new Error("Board Structure must be 8x8 Array.");
 
 		boardStructure.map(row => {
@@ -44,6 +48,26 @@ class Board {
 				this.grid[row_index][col_index] = this.interpretSymbol(col, { row: row_index, col: col_index });
 			})
 		})
+	}
+
+	getBoardStructure(): BoardStructure {
+		const boardStructure: BoardStructure = [];
+
+		this.grid.map(row => {
+			const rowStructure: Array<ChessSymbol> = [];
+
+			row.map(piece => {
+				if(piece) {
+					rowStructure.push(piece.symbol);
+				} else {
+					rowStructure.push('');
+				}
+			})
+
+			boardStructure.push(rowStructure);
+		})
+
+		return boardStructure;
 	}
 
 	interpretSymbol(symbol: ChessSymbol, position: Move): Piece|null {
@@ -107,6 +131,16 @@ class Board {
 		const newKingCol = isKingSide ? 5 : 1;
 		this.move(king, { row: king.position.row, col: newKingCol });
 		return true;
+	}
+
+	enPassant(piece: Piece) {
+		const direction = piece.color === "white" ? 1 : -1; // reverse in direction
+		const skippedPawn = this.grid[piece.position.row + direction][piece.position.col];
+
+		if(!skippedPawn) throw new Error(`Invalid En Passant.`);
+
+		this.grid[piece.position.row + direction][piece.position.col] = null;
+		return skippedPawn
 	}
 
 	getKing(color: Color) {

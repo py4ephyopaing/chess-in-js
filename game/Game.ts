@@ -5,7 +5,7 @@ import { Pawn } from "../pieces/Pawn";
 import { Piece } from "../pieces/Piece";
 import { Queen } from "../pieces/Queen";
 import { Rook } from "../pieces/Rook";
-import { Move, Color, Promote } from "../types"
+import { Move, Color, Promote, MoveType } from "../types"
 import { Board } from "./Board";
 
 class Game {
@@ -37,8 +37,10 @@ class Game {
         const destPosition = this.board.getPiece(dest);
 
         
-        if(!srcPosition) throw new Error(`No piece at ${src.row}x${src.col}.`);
-        if(srcPosition.color != this.turn) throw new Error(`This is not ${srcPosition.color} turn.`);
+        if(!srcPosition)
+            throw new Error(`No piece at ${src.row}x${src.col}.`);
+        if(srcPosition.color != this.turn)
+            throw new Error(`This is not ${srcPosition.color} turn.`);
         
         // invalid move factor
         const validMoves = srcPosition.getValidMoves(this.board);
@@ -46,17 +48,38 @@ class Game {
             throw new Error(`Your ${srcPosition} cannot move to ${dest.row}x${dest.col}.`);
         
         if(!destPosition) { // if there is no piece at dest. (just move)
-            this.board.move(srcPosition, dest);
-            
-            const destPosition = this.board.getPiece(dest);
+            this.board.move(srcPosition, dest); // move
 
-            if(this.isKingInCheck(srcPosition.color) && destPosition) { // invalid move because king will be check.
-                this.board.move(destPosition, src); // undo the move
+            const movedPosition = this.board.getPiece(dest); // moved Piece
+            var moveType: MoveType = "move";
+
+            if(
+                this.isKingInCheck(srcPosition.color) &&
+                movedPosition
+            ) { // invalid move because king will be check.
+                this.board.move(movedPosition, src); // undo the move
                 return false;
             }
 
-            if(destPosition instanceof Pawn) { // promotion
-                this.promotePawn(destPosition, 'queen'); // need to handle here.
+            if(
+                movedPosition instanceof Pawn &&
+                (
+                    (movedPosition.position.row == 7 && movedPosition.color == "black") ||
+                    (movedPosition.position.row == 0 && movedPosition.color == "white")
+                )
+            ) { // promotion
+                moveType = "promote";
+                this.promotePawn(movedPosition, 'queen'); // need to handle here.
+            }
+
+            if(
+                movedPosition instanceof Pawn &&
+                src.col != movedPosition.position.col
+            ) { // en passant
+                const enPassantPiece = this.board.enPassant(movedPosition);
+                const lostPieces = movedPosition.color === "black" ? this.lostPiecesOfWhite : this.lostPiecesOfBlack;
+                lostPieces.push(enPassantPiece);
+                moveType = "enPassant";
             }
 
             if(
@@ -64,10 +87,20 @@ class Game {
                 (dest.row == 0 || dest.row == 7) &&
                 (dest.col == 1 || dest.col == 5)
             ) { // castling
+                moveType = "castling";
                 this.board.castling(srcPosition, true);
+                
             }
 
             this.turn = this.turn == 'black' ? 'white' : 'black';
+            this.board.history.append(
+                src,
+                dest,
+                srcPosition,
+                this.board.getBoardStructure(),
+                moveType
+            );
+
             return true;
         }
 
@@ -87,6 +120,15 @@ class Game {
         }
         
         this.turn = this.turn == 'black' ? 'white' : 'black';
+        this.board.history.append(
+            src,
+            dest,
+            srcPosition,
+            this.board.getBoardStructure(),
+            "capture",
+            capturedPiece
+        );
+
         return true;
     }
 

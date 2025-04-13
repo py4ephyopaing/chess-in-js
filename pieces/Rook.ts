@@ -1,5 +1,5 @@
 import { Board } from '../game/Board';
-import { Color, Move } from '../types';
+import { ChessSymbol, Color, Move } from '../types';
 import { Piece } from './Piece';
 
 class Rook extends Piece {
@@ -43,6 +43,10 @@ class Rook extends Piece {
 	move(newPosition: Move): void {
 		super.move(newPosition);
 		this.hasMoved = true;
+	}
+
+	protected getSymbol(): ChessSymbol {
+		return this.color === "white" ? "r" : "R";
 	}
 }
 

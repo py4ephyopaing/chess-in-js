@@ -1,5 +1,5 @@
 import { Board } from '../game/Board';
-import { Move } from '../types';
+import { ChessSymbol, Move } from '../types';
 import { Piece } from './Piece';
 
 class Knight extends Piece {
@@ -16,6 +16,10 @@ class Knight extends Piece {
 		];
 
 		return moves.filter(board.isValidPosition);
+	}
+
+	protected getSymbol(): ChessSymbol {
+		return this.color === 'white' ? 'kn' : 'KN';
 	}
 }
 

@@ -1,5 +1,5 @@
 import { Board } from '../game/Board';
-import { Move } from '../types';
+import { ChessSymbol, Move } from '../types';
 import { Piece } from './Piece';
 
 class Bishop extends Piece {
@@ -27,6 +27,10 @@ class Bishop extends Piece {
       }
       return moves;
     }
+
+    protected getSymbol(): ChessSymbol {
+    	return this.color === 'white' ? 'b' : 'B';
+	}
 }
 
 export { Bishop }
