@@ -266,3 +266,35 @@ test("Should castling", () => {
         game.board.grid[7][5] instanceof King && game.board.grid[7][4] instanceof Rook
     ).toBe(true);
 });
+
+test("Should be en passant", () => {
+    const game = new Game();
+    
+    game.board.buildBoard([
+        ['',	'',	    '', 	'K',	'', 	'', 	'', 	'R'], // black
+        ['',	'P',    '',	    '',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'',		'p', 	'',		'',		'',		'',		''],
+        ['',	'',		'',		'',		'',	    '',		'',		''],
+        ['',	'',		'',		'',		'',		'',		'',		''],
+        ['',	'P',	'',		'',		'',		'',		'',		''],
+        ['r',	'',	    '', 	'k',	''  ,	'', 	'', 	'r'], // white
+    ]);
+
+    game.turn = 'black';
+    expect(game.move({ row: 1, col: 1 }, { row: 3, col: 1 })).toBe(true); // move pawn black
+
+    // check pawn has en passant move.
+    expect(game.board.grid[3][2] instanceof Pawn).toBe(true);
+    expect(game.board.grid[3][2]?.getValidMoves(game.board).some(({ row, col }) => row == 2 && col == 1)).toBe(true);
+
+    // en passant
+    expect(game.move({ row: 3, col: 2 }, { row: 2, col: 1 })).toBe(true);
+
+    // check
+    expect(game.board.grid[3][1] == null).toBe(true);
+    expect(
+        game.board.grid[2][1] instanceof Pawn &&
+        game.board.grid[2][1].color == "white"
+    ).toBe(true);
+});
