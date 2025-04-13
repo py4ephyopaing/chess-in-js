@@ -23,14 +23,14 @@ class Board {
 
 	initBoard() { // initiate the board.
 		this.buildBoard([
-			['R',	'KN',	'B',	'K',	'Q',	'B',	'KN',	'R'], // black
+			['R',	'N',	'B',	'K',	'Q',	'B',	'N',	'R'], // black
 			['P',	'P',	'P',	'P',	'P',	'P',	'P',	'P'],
 			['',	'',		'',		'',		'',		'',		'',		''],
 			['',	'',		'',		'',		'',		'',		'',		''],
 			['',	'',		'',		'',		'',		'',		'',		''],
 			['',	'',		'',		'',		'',		'',		'',		''],
 			['p',	'p',	'p',	'p',	'p',	'p',	'p',	'p'],
-			['r',	'kn',	'b',	'k',	'q',	'b',	'kn',	'r'], // white
+			['r',	'n',	'b',	'k',	'q',	'b',	'n',	'r'], // white
 		]);
 	}
 
@@ -83,8 +83,8 @@ class Board {
 			case 'b': return new Bishop('white', position);
 			case 'B': return new Bishop('black', position);
 			
-			case 'kn': return new Knight('white', position);
-			case 'KN': return new Knight('black', position);
+			case 'n': return new Knight('white', position);
+			case 'N': return new Knight('black', position);
 			
 			case 'q': return new Queen('white', position);
 			case 'Q': return new Queen('black', position);

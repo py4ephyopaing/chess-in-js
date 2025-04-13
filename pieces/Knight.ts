@@ -19,7 +19,7 @@ class Knight extends Piece {
 	}
 
 	protected getSymbol(): ChessSymbol {
-		return this.color === 'white' ? 'kn' : 'KN';
+		return this.color === 'white' ? 'n' : 'N';
 	}
 }
 
