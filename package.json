@@ -2,18 +2,32 @@
 	"name": "chess",
 	"version": "1.0.0",
 	"main": "index.js",
+	"types": "index.d.ts",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "tsc",
 		"watch": "tsc --watch"
 	},
-	"author": "",
+	"files": [
+		"dist"
+	],
+	"author": "Pyae Phyo Paing",
+	"keywords": [
+		"chess",
+		"typescript",
+		"OOP",
+		"game"
+	],
 	"license": "ISC",
 	"description": "",
 	"devDependencies": {
+		"@eslint/js": "^9.24.0",
 		"@types/jest": "^29.5.14",
+		"eslint": "^9.24.0",
+		"globals": "^16.0.0",
 		"jest": "^29.7.0",
 		"ts-jest": "^29.2.6",
-		"typescript": "^5.8.2"
+		"typescript": "^5.8.2",
+		"typescript-eslint": "^8.29.1"
 	}
 }
